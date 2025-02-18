@@ -1,16 +1,19 @@
 package web.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.dao.UserDao;
-import web.data.User;
+import web.model.User;
 
 @Service
 public class UserCrudServiceImpl implements UserCrudService {
-    private final UserDao userDao;
+    private UserDao userDao;
+    private PasswordEncoder passwordEncoder;
 
-    public UserCrudServiceImpl(UserDao userDao) {
+    public UserCrudServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
     @Transactional
     @Override
@@ -20,6 +23,7 @@ public class UserCrudServiceImpl implements UserCrudService {
     @Transactional
     @Override
     public void addUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.saveNewUser(user);
     }
     @Transactional
@@ -31,5 +35,11 @@ public class UserCrudServiceImpl implements UserCrudService {
     @Override
     public void deleteUserById(long id){
         userDao.deleteUser(id);
+    }
+
+    @Transactional
+    @Override
+    public User getUserByName(String name) {
+        return userDao.getUserByName(name);
     }
 }

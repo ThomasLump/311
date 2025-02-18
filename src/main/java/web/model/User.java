@@ -1,13 +1,16 @@
-package web.data;
-
+package web.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "Users")
-public class User {
+@Table(name = "Users", schema = "mysql-test")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +21,14 @@ public class User {
 
     @Column
     private String phone_number;
+
+    @Column
+    private String password;
+
+    @Column
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "Users-Roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> role;
 
     public User() {}
 
@@ -46,12 +57,27 @@ public class User {
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                '}';
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("getAuthorities");
+        System.out.println(role);
+        return role;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRole() {
+        return role;
+    }
+
+    public void setRole(Set<Role> role) {
+        this.role = role;
     }
 
     @Override
@@ -64,5 +90,16 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getUsername(), getPhone_number());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

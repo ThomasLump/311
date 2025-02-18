@@ -1,0 +1,38 @@
+
+    <div th:fragment="newUserTabContent"
+            class="tab-pane fade show border border-1 bg-white"
+         id="newusertab"
+         role="tabpanel">
+        <div class="border-bottom border-1 bg-light p-3">
+            <h5 class="text-dark">New User</h5>
+        </div>
+        <div>
+            <!--/*@thymesVar id="newuser" type="web.model.User"*/-->
+            <form class="d-flex flex-column justify-content-center align-items-center" action="/admin/add"
+                  method="post" th:object="${newuser}">
+                <h6 class="mt-3 mb-0 text-dark">Name</h6>
+                <br>
+                <input class="w-25 rounded-1 border border-opacity-50 bg-warning bg-opacity-10" type="text"
+                       th:field="${newuser.username}">
+                <br>
+                <h6 class="mt-3 text-dark">Password</h6>
+                <br>
+                <input class="w-25 rounded-1 border border-opacity-50 bg-warning bg-opacity-10"
+                       type="password" th:field="${newuser.password}">
+                <br>
+                <h6 class="mt-3">Phone Number</h6>
+                <br>
+                <input class="w-25 rounded-1 border border-opacity-50 bg-warning bg-opacity-10" type="text"
+                       th:field="${newuser.phone_number}">
+                <br>
+                <select class="mt-3" name="newuserrolename">
+                    <option th:each="role : ${rolelist}"
+                            th:value="${role.name}"
+                            th:text="${role.name}">
+                    </option>
+                </select>
+
+                <button class="btn my-3 btn-success" type="submit">Add new user</button>
+            </form>
+        </div>
+    </div>

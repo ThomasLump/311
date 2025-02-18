@@ -1,7 +1,9 @@
 package web.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import web.data.User;
+import web.model.User;
+
+import java.util.stream.StreamSupport;
 
 public interface UserCrudService {
     @Transactional
@@ -15,4 +17,7 @@ public interface UserCrudService {
 
     @Transactional
     void deleteUserById(long id);
+
+    @Transactional
+    User getUserByName(String name);
 }
