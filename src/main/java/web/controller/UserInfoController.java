@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import web.service.UserCrudService;
+import web.service.UserService;
 
 import java.security.Principal;
 
@@ -19,7 +20,7 @@ public class UserInfoController {
 
     @GetMapping("/")
     public String getUserInfo(Model model, Principal principal) {
-        model.addAttribute("userInfo", userCrudService.getUserByName(principal.getName()));
+        model.addAttribute("userInfo", userCrudService.getUserDtoByName(principal.getName()));
         return "main";
     }
 

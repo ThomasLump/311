@@ -3,47 +3,46 @@ package web.init;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import web.dao.RoleDao;
+import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
 import web.service.RoleService;
 import web.service.UserCrudService;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.StreamSupport;
 
 @Component
 public class AppInit implements CommandLineRunner {
-    private UserCrudService userCrudService;
-    private RoleService roleService;
+    private UserDao userDao;
+    private RoleDao roleDao;
     private PasswordEncoder passwordEncoder;
 
-    public AppInit(UserCrudService userCrudService, RoleService roleService, PasswordEncoder passwordEncoder) {
-        this.userCrudService = userCrudService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-    }
+
     @Override
     public void run(String... args) throws Exception {
         addAdmin();
     }
 
     protected void addAdmin() {
-        if(StreamSupport.stream(userCrudService.getAllUsers().spliterator(),false)
+        if(userDao.getAllUsers().stream()
                 .noneMatch(user-> "admin".equals(user.getUsername()))) {
             User initUser = new User();
             initUser.setUsername("admin");
             initUser.setPassword(passwordEncoder.encode("0000"));
-            Role initRole = roleService.getRole("admin").orElseGet(() -> {
+            Role initRole = roleDao.findRoleByName("admin").orElseGet(() -> {
                 Role addedRole = new Role();
                 addedRole.setName("admin");
-                roleService.addNew(addedRole);
+                roleDao.postRole(addedRole);
                 return addedRole;
             });
             Set<Role> roles = new HashSet<>();
-            roles.add(roleService.getRole(initRole.getName()).orElseThrow());
+            roles.add(roleDao.findRoleByName(initRole.getName()).orElseThrow());
             initUser.setRole(roles);
-            userCrudService.updateUser(initUser);
+            userDao.updateUser(initUser);
         }
     }
 

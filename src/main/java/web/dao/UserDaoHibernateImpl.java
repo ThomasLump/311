@@ -1,9 +1,11 @@
 package web.dao;
 
 import jakarta.persistence.EntityManager;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 import web.model.User;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDaoHibernateImpl implements UserDao {
@@ -14,20 +16,22 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Iterable<User> getAllUsers() {
-        return (Iterable<User>) entityManager.createQuery("from User").getResultList();
+    public List<User> getAllUsers() {
+        return entityManager.createQuery("from User u join fetch u.role", User.class).getResultList();
     }
 
     @Override
-    public User getUserByName(String name) {
-        return entityManager.createQuery("from User where username = :name", User.class).setParameter("name", name).getSingleResult();
+    public Optional<User> findUserByName(String name) {
+        List<User> attemt = entityManager.createQuery("from User u join fetch u.role where u.username = :name ", User.class).setParameter("name", name).getResultList();
+        return Optional.ofNullable(attemt.isEmpty() ? null : attemt.getFirst());
     }
 
     @Override
     public void updateUser(User user) {
-        entityManager.merge(user);
-
+        User persistUser = entityManager.createQuery("from User u join fetch u.role where u.id= :id",User.class).setParameter("id",user.getId()).getSingleResult();
+        persistUser.setUsername(user.getUsername());
+        persistUser.setPhone_number(user.getPhone_number());
+        persistUser.setRole(user.getRole());
     }
 
     @Override

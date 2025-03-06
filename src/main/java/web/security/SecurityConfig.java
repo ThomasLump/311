@@ -1,20 +1,27 @@
-package web.config;
+package web.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired
+    AnnotationConfigApplicationContext context;
 
     @Bean
     public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -28,20 +35,34 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler getSuccessHandler() {
-        System.out.println("getSuccessHandler");
         return (request, response, authentication) -> {
-            System.out.println("successHandler invoked");
-            response.sendRedirect(
-                    authentication.getAuthorities().stream().anyMatch(authority -> "admin".equals(authority.getAuthority()))
-                            ? "/admin/"
-                            : "/user/"
-            );
+            response.setHeader("Authorization", "Bearer "
+                    + context.getBean(JwtProvider.class).generateToken(authentication.getName()));
+            response.sendRedirect(authentication.getAuthorities().stream()
+                    .anyMatch(authority -> "admin".equals(authority.getAuthority()))
+                    ? "/admin/"
+                    : "/user/");
         };
     }
 
     @Bean
-    public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("getSecurityChain");
+    @Order(1)
+    public SecurityFilterChain getRESTSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(configurer ->
+                        configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(customizer ->
+                        customizer
+                                .requestMatchers("/api/**").authenticated()
+                )
+                .addFilterBefore(context.getBean(JwtAuthenticationFilter.class), UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain getWebSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {

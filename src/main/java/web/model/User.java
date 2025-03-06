@@ -1,6 +1,10 @@
 package web.model;
 
 import jakarta.persistence.*;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,16 +21,22 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
+    @NotBlank
+    @Size(min = 2, max = 50, message = "username cannot be empty")
     private String username;
 
     @Column
+    @Pattern(regexp = "^(\\+7|8)?[\\s-]?\\(?\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{2}[\\s-]?\\d{2}$",
+            message = "incorrect phone number")
     private String phone_number;
 
     @Column
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$",
+            message = "Password must contain at least 8 characters, including letters, digits, and special characters.")
     private String password;
 
     @Column
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Users-Roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> role;
 

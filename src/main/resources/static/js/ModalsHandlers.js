@@ -6,7 +6,6 @@
         const id = button.getAttribute('data-id');
         const name = button.getAttribute('data-name');
         const phone = button.getAttribute('data-phonenumber');
-        console.log(button,id,name,phone);
 
         console.log(document.getElementById('editmodalInputId').value = id)
         document.getElementById('editmodalInputName').value = name;

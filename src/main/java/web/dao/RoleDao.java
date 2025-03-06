@@ -2,12 +2,12 @@ package web.dao;
 
 import web.model.Role;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RoleDao {
-    Optional<Role> findRoleByName(String name);
     void postRole(Role role);
-    Iterable<Role> getAllRoles();
-
-    Role geetRoleById(long id);
+    List<Role> getAllRoles();
+    Optional<Role> findRoleByName(String name);
+    Optional<Role> findRoleById(long id);
 }

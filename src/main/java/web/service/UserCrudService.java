@@ -1,23 +1,21 @@
 package web.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import web.dto.UserDto;
 import web.model.User;
 
-import java.util.stream.StreamSupport;
-
 public interface UserCrudService {
-    @Transactional
-    Iterable<User> getAllUsers();
 
-    @Transactional
-    void addUser(User user);
+    Iterable<UserDto> getAllUsers();
 
-    @Transactional
-    void updateUser(User user);
 
-    @Transactional
+    void addUserByDto(UserDto user);
+
+
+    void updateUserByDto(UserDto user);
+
+
     void deleteUserById(long id);
 
-    @Transactional
-    User getUserByName(String name);
+
+    UserDto getUserDtoByName(String name);
 }

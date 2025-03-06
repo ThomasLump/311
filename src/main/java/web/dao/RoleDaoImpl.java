@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public class RoleDaoImpl implements RoleDao {
     EntityManager entityManager;
+
     public RoleDaoImpl(EntityManager entityManager, AbstractTemplateResolver abstractTemplateResolver) {
         this.entityManager = entityManager;
     }
@@ -26,13 +27,22 @@ public class RoleDaoImpl implements RoleDao {
         entityManager.merge(role);
     }
 
+    /**
+     * Получает список всех ролей из базы данных.
+     * <p>
+     * Метод выполняет SQL-запрос для выборки всех записей из таблицы "Role".
+     * Если в базе данных отсутствуют роли, метод возвращает пустой список.
+     *
+     * @return Список всех ролей. Если роли отсутствуют, возвращается пустой список (но не null).
+     */
     @Override
-    public Iterable<Role> getAllRoles() {
+    public List<Role> getAllRoles() {
         return entityManager.createQuery("from Role",Role.class).getResultList();
     }
 
     @Override
-    public Role geetRoleById(long id) {
-        return entityManager.createQuery("from Role where id = :id",Role.class).setParameter("id", id).getSingleResult();
+    public Optional<Role> findRoleById(long id) {
+        List<Role> attempt = entityManager.createQuery("from Role where id = :id",Role.class).setParameter("id", id).getResultList();
+        return Optional.ofNullable(attempt.isEmpty() ? null : attempt.getFirst());
     }
 }
