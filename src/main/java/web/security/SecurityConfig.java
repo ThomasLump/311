@@ -1,5 +1,6 @@
 package web.security;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,8 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    AnnotationConfigApplicationContext context;
+
+    BeanFactory context;
+
+    public SecurityConfig(BeanFactory context) {
+        this.context = context;
+    }
 
     @Bean
     public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -49,12 +55,13 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain getRESTSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(customizer ->
                         customizer
-                                .requestMatchers("/api/**").authenticated()
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(context.getBean(JwtAuthenticationFilter.class), UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -64,20 +71,21 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain getWebSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> {
-                auth
-                                .requestMatchers("/admin/**").hasAuthority("admin")
-                                .requestMatchers("/user/**").hasAnyAuthority("admin","user")
-                                .requestMatchers("/login").permitAll()
-                                .anyRequest().authenticated();
-                    }
-            )
-            .formLogin(customizer -> customizer
-                .successHandler(getSuccessHandler())
-                .failureUrl("/login?error=true")
-            )
-                .logout( config -> config
+                .securityMatcher("/admin/**", "/user/**", "/login", "/logout")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> {
+                            auth
+                                    .requestMatchers("/admin/**").hasAuthority("admin")
+                                    .requestMatchers("/user/**").hasAnyAuthority("admin", "user")
+                                    .requestMatchers("/login").permitAll()
+                                    .anyRequest().authenticated();
+                        }
+                )
+                .formLogin(customizer -> customizer
+                        .successHandler(getSuccessHandler())
+                        .failureUrl("/login?error=true")
+                )
+                .logout(config -> config
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)

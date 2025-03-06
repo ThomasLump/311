@@ -14,13 +14,13 @@
             </thead>
             <tbody class="text-dark">
             <tr>
-                <!--/*@thymesVar id="userInfo" type="web.model.User"*/-->
+                <!--/*@thymesVar id="userInfo" type="web.dto.UserDto"*/-->
                 <td th:text="${userInfo.id}"></td>
                 <td th:text="${userInfo.username}"></td>
                 <td th:text="${userInfo.phone_number}"></td>
                 <td>
-                    <span th:each="tdrole: ${userInfo.authorities}">
-                        <span th:text="${tdrole.authority}"></span>
+                    <span th:each="tdrole: ${userInfo.roles}">
+                        <span th:text="${tdrole}"></span>
                     </span>
                 </td>
             </tr>

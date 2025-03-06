@@ -7,18 +7,13 @@
             <h5 class="text-dark">New User</h5>
         </div>
         <div>
-            <!--/*@thymesVar id="newuser" type="web.model.User"*/-->
+            <!--/*@thymesVar id="newuser" type="web.dto.UserDto"*/-->
             <form class="d-flex flex-column justify-content-center align-items-center" action="/admin/add"
                   method="post" th:object="${newuser}">
                 <h6 class="mt-3 mb-0 text-dark">Name</h6>
                 <br>
                 <input class="w-25 rounded-1 border border-opacity-50 bg-warning bg-opacity-10" type="text"
                        th:field="${newuser.username}">
-                <br>
-                <h6 class="mt-3 text-dark">Password</h6>
-                <br>
-                <input class="w-25 rounded-1 border border-opacity-50 bg-warning bg-opacity-10"
-                       type="password" th:field="${newuser.password}">
                 <br>
                 <h6 class="mt-3">Phone Number</h6>
                 <br>
@@ -31,7 +26,6 @@
                             th:text="${role.name}">
                     </option>
                 </select>
-
                 <button class="btn my-3 btn-success" type="submit">Add new user</button>
             </form>
         </div>

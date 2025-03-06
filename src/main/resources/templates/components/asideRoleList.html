@@ -1,13 +1,13 @@
-<!--/*@thymesVar id="userInfo" type="web.model.User"*/-->
+<!--/*@thymesVar id="userInfo" type="web.dto.UserDto"*/-->
 <ul th:fragment="roleList"
     id="roleList"
     style="list-style: none;
             padding-left: 0;">
     <li class="p-0 m-0"
-        th:each="role : ${userInfo.authorities}">
+        th:each="role : ${userInfo.roles}">
         <button class="text-white btn bg-primary w-100 rounded-0 "
-                th:text="${role.authority}"
-                th:attr="data-target=|${role.authority}Panel|"
+                th:text="${role}"
+                th:attr="data-target=|${role}Panel|"
         ></button>
     </li>
 </ul>

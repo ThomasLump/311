@@ -21,6 +21,11 @@ public class AppInit implements CommandLineRunner {
     private RoleDao roleDao;
     private PasswordEncoder passwordEncoder;
 
+    public AppInit(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void run(String... args) throws Exception {

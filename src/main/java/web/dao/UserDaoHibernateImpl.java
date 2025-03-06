@@ -1,6 +1,7 @@
 package web.dao;
 
 import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class UserDaoHibernateImpl implements UserDao {
     private final EntityManager entityManager;
 
+    @Autowired
     public UserDaoHibernateImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

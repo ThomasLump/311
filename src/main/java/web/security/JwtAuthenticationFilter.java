@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtProvider provider;
     private UserDetailsService userDetailsService;
 
+    @Autowired
     public JwtAuthenticationFilter(JwtProvider provider, UserDetailsService userDetailsService) {
         this.provider = provider;
         this.userDetailsService = userDetailsService;
@@ -24,8 +26,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (!request.getHeader("Authorization").startsWith("Bearer") | request.getHeader("Authorization") == null) {
+        if (request.getHeader("Authorization") == null || !request.getHeader("Authorization").startsWith("Bearer") ) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         String token = request.getHeader("Authorization").substring(7);
