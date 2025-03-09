@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
@@ -23,7 +24,6 @@ public class RoleServiceImpl implements RoleService {
         roleDao.postRole(addedRole);
     }
 
-    @Transactional
     @Override
     public Role getRole(String roleName) {
         Optional<Role> roleOptional = roleDao.findRoleByName(roleName);
@@ -34,7 +34,6 @@ public class RoleServiceImpl implements RoleService {
         }
     }
 
-    @Transactional
     @Override
     public List<Role> getAll() {
         List<Role> roleList = roleDao.getAllRoles();
@@ -44,7 +43,6 @@ public class RoleServiceImpl implements RoleService {
         return roleList;
     }
 
-    @Transactional
     @Override
     public Role getRoleById(long id) {
         Optional<Role> roleOptional = roleDao.findRoleById(id);

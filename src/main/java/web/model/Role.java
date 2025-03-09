@@ -3,6 +3,7 @@ package web.model;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -53,5 +54,16 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return name;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return getId() == role.getId() && Objects.equals(getName(), role.getName()) && Objects.equals(getUsers(), role.getUsers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getUsers());
+    }
 }

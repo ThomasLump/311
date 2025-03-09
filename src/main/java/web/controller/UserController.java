@@ -4,23 +4,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import web.service.UserCrudService;
-import web.service.UserService;
+import web.service.UserServiceCrud;
 
 import java.security.Principal;
 
 @Controller
 @RequestMapping("/user")
-public class UserInfoController {
-    private UserCrudService userCrudService;
+public class UserController {
+    private UserServiceCrud userServiceCrud;
 
-    public UserInfoController(UserCrudService userCrudService) {
-        this.userCrudService = userCrudService;
+    public UserController(UserServiceCrud userServiceCrud) {
+        this.userServiceCrud = userServiceCrud;
     }
 
     @GetMapping("/")
     public String getUserInfo(Model model, Principal principal) {
-        model.addAttribute("userInfo", userCrudService.getUserDtoByName(principal.getName()));
+        model.addAttribute("userInfo", userServiceCrud.getUserDtoByName(principal.getName()));
         return "main";
     }
 

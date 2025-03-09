@@ -1,5 +1,6 @@
 package web.init;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -7,13 +8,9 @@ import web.dao.RoleDao;
 import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
-import web.service.RoleService;
-import web.service.UserCrudService;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
 @Component
 public class AppInit implements CommandLineRunner {
@@ -21,6 +18,7 @@ public class AppInit implements CommandLineRunner {
     private RoleDao roleDao;
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
     public AppInit(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;

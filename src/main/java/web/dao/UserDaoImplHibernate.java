@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDaoHibernateImpl implements UserDao {
-    private final EntityManager entityManager;
+public class UserDaoImplHibernate implements UserDao {
+    private EntityManager entityManager;
 
     @Autowired
-    public UserDaoHibernateImpl(EntityManager entityManager) {
+    public UserDaoImplHibernate(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

@@ -4,6 +4,7 @@ package web.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -12,10 +13,11 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    private static final String KEY = "0123456789012344567890123456789012345677890123456789";
+    @Value("${security.encryption-key}")
+    private String encryptionKey;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(KEY));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(encryptionKey));
     }
 
     public String generateToken(String username){

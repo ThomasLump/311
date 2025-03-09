@@ -1,5 +1,6 @@
 package web.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,7 @@ import web.service.UserService;
 public class UserController {
     private UserService service;
 
-
+    @Autowired
     public UserController (UserService service) {
         this.service = service;
 

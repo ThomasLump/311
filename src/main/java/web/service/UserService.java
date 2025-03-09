@@ -17,7 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserCrudService, UserDetailsService {
+@Transactional(readOnly = true)
+public class UserService implements UserServiceCrud, UserDetailsService {
     private UserDao userDao;
     private PasswordEncoder passwordEncoder;
 
@@ -26,7 +27,7 @@ public class UserService implements UserCrudService, UserDetailsService {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
     }
-    @Transactional
+
     @Override
     public Iterable<UserDto> getAllUsers(){
         return userDao.getAllUsers().stream().map(UserDtoMapper::fromUserToDto).collect(Collectors.toSet());
@@ -51,7 +52,6 @@ public class UserService implements UserCrudService, UserDetailsService {
         userDao.deleteUser(id);
     }
 
-    @Transactional
     @Override
     public UserDto getUserDtoByName(String name) {
         Optional<User> userOptional = userDao.findUserByName(name);
