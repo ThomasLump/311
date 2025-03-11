@@ -1,7 +1,6 @@
 package web.dao;
 
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.templateresolver.AbstractTemplateResolver;
 import web.model.Role;
@@ -11,9 +10,8 @@ import java.util.Optional;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    @Autowired
     public RoleDaoImpl(EntityManager entityManager, AbstractTemplateResolver abstractTemplateResolver) {
         this.entityManager = entityManager;
     }

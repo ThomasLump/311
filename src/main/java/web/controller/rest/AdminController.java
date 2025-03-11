@@ -1,8 +1,10 @@
-package web.rest;
+package web.controller.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import web.dto.UserDto;
 import web.service.RoleService;
 import web.service.UserServiceCrud;
@@ -10,10 +12,9 @@ import web.service.UserServiceCrud;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-    UserServiceCrud userService;
-    RoleService roleService;
+    private final UserServiceCrud userService;
+    private final RoleService roleService;
 
-    @Autowired
     public AdminController(RoleService roleService, UserServiceCrud userServiceCrud) {
         this.roleService = roleService;
         this.userService = userServiceCrud;
@@ -42,7 +43,4 @@ public class AdminController {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
     }
-
-    //test
-    //test2 - 2
 }

@@ -1,6 +1,5 @@
 package web.init;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -14,11 +13,10 @@ import java.util.Set;
 
 @Component
 public class AppInit implements CommandLineRunner {
-    private UserDao userDao;
-    private RoleDao roleDao;
-    private PasswordEncoder passwordEncoder;
+    private final UserDao userDao;
+    private final RoleDao roleDao;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public AppInit(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;

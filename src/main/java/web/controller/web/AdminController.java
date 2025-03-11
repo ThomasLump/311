@@ -1,14 +1,8 @@
-package web.controller;
+package web.controller.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import web.dto.UserDto;
 import web.model.Role;
 import web.service.RoleService;
@@ -22,15 +16,13 @@ import java.util.Collections;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private UserServiceCrud userServiceCrud;
-    private RoleService roleService;
+    private final UserServiceCrud userServiceCrud;
+    private final RoleService roleService;
 
-    @Autowired
     public AdminController(UserServiceCrud userServiceCrud, RoleService roleService) {
         this.userServiceCrud = userServiceCrud;
         this.roleService = roleService;
     }
-
 
     @GetMapping("/")
     public String home(Model model, Principal principal) {

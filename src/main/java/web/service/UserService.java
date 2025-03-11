@@ -1,7 +1,6 @@
 package web.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,10 +18,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class UserService implements UserServiceCrud, UserDetailsService {
-    private UserDao userDao;
-    private PasswordEncoder passwordEncoder;
+    private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserService(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;

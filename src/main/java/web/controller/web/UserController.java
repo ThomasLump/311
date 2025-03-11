@@ -1,5 +1,6 @@
-package web.controller;
+package web.controller.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import java.security.Principal;
 public class UserController {
     private UserServiceCrud userServiceCrud;
 
+    @Autowired
     public UserController(UserServiceCrud userServiceCrud) {
         this.userServiceCrud = userServiceCrud;
     }

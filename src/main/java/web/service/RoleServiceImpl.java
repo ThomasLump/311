@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
     public RoleServiceImpl(RoleDao roleDao) {
         this.roleDao = roleDao;
