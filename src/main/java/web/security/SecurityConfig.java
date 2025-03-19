@@ -39,12 +39,16 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler getSuccessHandler() {
         return (request, response, authentication) -> {
-            response.setHeader("Authorization", "Bearer "
-                    + context.getBean(JwtProvider.class).generateToken(authentication.getName()));
-            response.sendRedirect(authentication.getAuthorities().stream()
-                    .anyMatch(authority -> "admin".equals(authority.getAuthority()))
+            String redirectUrl = authentication.getAuthorities().stream().anyMatch(
+                    authority -> "admin".equals(authority.getAuthority()))
                     ? "/admin/"
-                    : "/user/");
+                    : "/user/";
+            String token = context.getBean(JwtProvider.class).generateToken(authentication.getName());
+
+            response.setHeader("Authorization", "Bearer " + token);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"redirectUrl\": \"" + redirectUrl + "\"}");
+            response.getWriter().flush();
         };
     }
 
@@ -81,6 +85,7 @@ public class SecurityConfig {
                 .formLogin(customizer -> customizer
                         .successHandler(getSuccessHandler())
                         .failureUrl("/login?error=true")
+                        .loginPage("/login").permitAll()
                 )
                 .logout(config -> config
                         .logoutUrl("/logout")

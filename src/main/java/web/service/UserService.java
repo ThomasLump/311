@@ -7,22 +7,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.dao.RoleDao;
 import web.dao.UserDao;
+import web.dto.NewUserDto;
 import web.dto.UserDto;
 import web.mapper.UserDtoMapper;
+import web.model.Role;
 import web.model.User;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class UserService implements UserServiceCrud, UserDetailsService {
     private final UserDao userDao;
+    private final RoleDao roleDao;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -33,9 +39,12 @@ public class UserService implements UserServiceCrud, UserDetailsService {
 
     @Transactional
     @Override
-    public void addUserByDto(UserDto userDto){
+    public void addUserByDto(NewUserDto userDto){
+        System.out.println(userDto);
         User user = UserDtoMapper.fromDtoToUser(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(user.getRole().stream().map(role -> roleDao.findRoleByName(role.getName()).orElseThrow()).collect(Collectors.toSet()));
+        user.setId(null);
         userDao.saveNewUser(user);
     }
     @Transactional

@@ -10,10 +10,10 @@ import web.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class ApiUserController {
     private final UserService service;
 
-    public UserController (UserService service) {
+    public ApiUserController(UserService service) {
         this.service = service;
 
     }

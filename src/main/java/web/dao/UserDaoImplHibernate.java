@@ -31,7 +31,9 @@ public class UserDaoImplHibernate implements UserDao {
         User persistUser = entityManager.createQuery("from User u join fetch u.role where u.id= :id",User.class).setParameter("id",user.getId()).getSingleResult();
         persistUser.setUsername(user.getUsername());
         persistUser.setPhone_number(user.getPhone_number());
-        persistUser.setRole(user.getRole());
+        if (user.getRole()!=null) {
+            persistUser.setRole(user.getRole());
+        }
     }
 
     @Override
@@ -42,7 +44,7 @@ public class UserDaoImplHibernate implements UserDao {
 
     @Override
     public void deleteUser(long id) {
-        System.out.println("deleted ID " + id);
+        System.out.println("🚨deleted ID " + id);
         entityManager.createQuery("delete from User where id = :id").setParameter("id", id).executeUpdate();
     }
 }

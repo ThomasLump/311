@@ -32,6 +32,7 @@ public class AdminController {
         model.addAttribute("updateuser", new UserDto());
         model.addAttribute("rolelist", roleService.getAll());
         model.addAttribute("newuserrole", new Role());
+        System.out.println("🌐WEB home");
         return "main";
     }
 
@@ -44,7 +45,7 @@ public class AdminController {
                 userDto.phone_number(),
                 Collections.singletonList(roleName) // заменяем список ролей на новый
         );
-        userServiceCrud.addUserByDto(userDto);
+        //userServiceCrud.addUserByDto(userDto);
         return "redirect:/admin/";
     }
 

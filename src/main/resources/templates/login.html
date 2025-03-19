@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}" defer></script>
+    <script src="/js/LoginHandler.js" defer></script>
+</head>
+<body>
+<div class="content d-flex justify-content-center">
+    <form id="login-form"
+          class="login-form mt-4">
+        <h2 class="bold">Please sign in</h2>
+        <p>
+            <label for="username" class="screenreader d-none">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username" required autofocus
+            class="border-opacity-50">
+        </p>
+        <p>
+            <label for="password" class="screenreader d-none">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required
+            class="border-opacity-50">
+        </p>
+        <button type="submit" class="btn btn-primary w-100">Sign in</button>
+    </form>
+</div>
+</body>
+</html>
