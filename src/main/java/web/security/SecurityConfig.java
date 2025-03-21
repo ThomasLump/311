@@ -72,12 +72,10 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain getWebSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/admin/**", "/user/**", "/login", "/logout")
+                .securityMatcher("/login", "/logout")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                             auth
-                                    .requestMatchers("/admin/**").hasAuthority("admin")
-                                    .requestMatchers("/user/**").hasAnyAuthority("admin", "user")
                                     .requestMatchers("/login").permitAll()
                                     .anyRequest().authenticated();
                         }

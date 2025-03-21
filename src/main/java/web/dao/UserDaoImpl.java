@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDaoImplHibernate implements UserDao {
+public class UserDaoImpl implements UserDao {
     private final EntityManager entityManager;
 
-    public UserDaoImplHibernate(EntityManager entityManager) {
+    public UserDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

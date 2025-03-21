@@ -1,48 +1,119 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>home</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
-    <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}" defer></script>
-    <script src="/js/UpdateTable.js" defer></script>
-    <script src="/js/ModalsHandlers.js" defer></script>
-    <script src="/js/asideListHandler.js" defer></script>
-    <script src="/js/NewUserHandler.js" defer></script>
-    <script src="/js/DeleteHandler.js" defer></script>
-
+    <title>Main</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+    <script src="/js/main.js" type="module" defer></script>
 </head>
 <body>
-<header th:replace="components/header :: header"></header>
+<header>
+    <div class="container-fluid bg-dark text-white">
+        <div class="row">
+            <div class="col-11">
+                <h2>HELLO1</h2>
+            </div>
+            <div class="col-1">
+                <form action="/logout">
+                    <button class="btn mt-1 btn-dark text-secondary" type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
 <main class="container-fluid">
     <div class="row">
         <aside class="col-2 bg-white p-0">
-            <ul th:replace="components/asideRoleList :: roleList"></ul>
+            <ul id="roleList" class="list-group list-group-flush"></ul>
         </aside>
         <div id="content" class="col-10 bg-light px-4 py-3 min-vh-100">
-            <section id="adminPanel"
-                     class="content-section"
-                     sec:authorize="hasAuthority('admin')"
-                     style="display: none">
+            <section id="adminPanel" class="content-section" style="display: none">
                 <h2 class="text-dark">Admin panel</h2>
-                <nav th:replace="components/navigationTabs :: navigationTabs"></nav>
+                <nav id="navigationTabs">
+                    <div class="nav nav-tabs" id="myTab" role="tablist">
+                        <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#usertable" type="button" role="tab">Users</button>
+                        <button class="nav-link" id="newuser-tab" data-bs-toggle="tab" data-bs-target="#newusertab" type="button" role="tab">New User</button>
+                    </div>
+                </nav>
                 <div class="tab-content" id="myTabContent">
-                    <div th:replace="components/userTableTabContent :: userTableTabContent"></div>
-                    <div th:replace="components/newUserTabContent :: newUserTabContent"></div>
+                    <div id="userTableTabContent" class="tab-pane fade show active border border-1 bg-white" id="usertable" role="tabpanel">
+                        <div class="border-bottom border-1 bg-light p-3">
+                            <h5 class="text-dark">All users</h5>
+                        </div>
+                        <div class="m-3">
+                            <table class="table table-striped border-top border-1">
+                                <thead class="text-dark">
+                                    <th>id</th>
+                                    <th>name</th>
+                                    <th>phonenumber</th>
+                                    <th></th>
+                                    <th></th>
+                                </thead>
+                                <tbody class="text-dark" id="usersTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="newUserTabContent" class="tab-pane fade"></div>
                 </div>
-                <div th:replace="components/deleteModal :: deleteModal"></div>
-                <div th:replace="components/editModal :: editModal"></div>
+                <div id="deleteModal"></div>
+                <div id="editModal"></div>
             </section>
-            <section id="userPanel"
-                     class="content-section"
-                     style="display: none">
+            <section id="userPanel" class="content-section" style="display: none">
                 <h2 class="text-dark">User information-page</h2>
-                <div th:replace="components/UserInfoContent :: UserInfoContent"></div>
+                <div id="userInfoContent" class="border border-1 bg-white">
+                    <div class="border-bottom border-1 bg-light p-3">
+                        <h5 class="text-dark">About user</h5>
+                    </div>
+                    <div class="m-3">
+                        <table class="table table-striped border-top border-1">
+                            <thead class="text-dark">
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Phonenumber</th>
+                                <th>Role</th>
+                            </thead>
+                            <tbody class="text-dark" id="userInfoTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
 </main>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="edituserModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalTitleLabel">Edit User</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <form id="editForm">
+                    <div class="mb-3 text-center">
+                        <label for="editmodalInputId" class=""><b>Id</b></label>
+                        <input type="text" class="form-control mx-auto" id="editmodalInputId" name="userId" readonly>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <label for="editmodalInputName" class="form-label"><b>Name</b></label>
+                        <input type="text" class="form-control" id="editmodalInputName" name="name">
+                    </div>
+                    <div class="mb-3 text-center">
+                        <label for="editmodalInputPhonenumber" class="form-label"><b>Phone Number</b></label>
+                        <input type="text" class="form-control" id="editmodalInputPhonenumber" name="phonenumber">
+                    </div>
+                </form>
+            </div>
+            <div class="mb-3 w-100 d-flex justify-content-end modal-footer">
+                <button type="button" class="btn btn-secondary mt-3 me-1" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary mt-3 me-1" form="editForm">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

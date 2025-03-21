@@ -30,7 +30,6 @@ public class JwtProvider {
     }
 
     public void validateToken(String token) {
-        System.out.println("🔑Validaating token");
         Jwts.parser().verifyWith(getSigningKey()).build().isSigned(token);
     }
 

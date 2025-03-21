@@ -1,34 +1,38 @@
 package web.controller.rest;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import web.dto.NewUserDto;
 import web.dto.UserDto;
 import web.service.RoleService;
-import web.service.UserServiceCrud;
+import web.service.UserService;
 
 @RestController
 @RequestMapping("/api/admin")
 public class ApiAdminController {
-    private final UserServiceCrud userService;
+    private final UserService userService;
     private final RoleService roleService;
 
-    public ApiAdminController(RoleService roleService, UserServiceCrud userServiceCrud) {
+    public ApiAdminController(RoleService roleService, UserService userService) {
         this.roleService = roleService;
-        this.userService = userServiceCrud;
+        this.userService = userService;
     }
 
     @GetMapping("/users")
     public ResponseEntity<Iterable<UserDto>> getAllUsers() {
-        System.out.println("🚀REST USERS");
         Iterable<UserDto> users = userService.getAllUsers();
-        System.out.println(users);
          return ResponseEntity.ok(users);
     }
 
     @PostMapping("/add")
     public ResponseEntity<Void> addUser(@RequestBody NewUserDto userDto) {
-        System.out.println("🚀REST ADD");
         userService.addUserByDto(userDto);
         return ResponseEntity.ok().build();
     }
@@ -39,9 +43,8 @@ public class ApiAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        System.out.println("🚀REST DELETE");
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteUser(@RequestParam Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
     }
